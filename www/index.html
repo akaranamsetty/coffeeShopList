@@ -1,45 +1,82 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title></title>
+<html >
+<head >
+	<meta charset="utf-8" >
+	<meta name="viewport"
+	      content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width" >
+	<title ></title >
 
-    <link rel="manifest" href="manifest.json">
+	<link href="lib/ionic/css/ionic.css"
+	      rel="stylesheet" >
+	<link href="css/style.css"
+	      rel="stylesheet" >
 
-    <!-- un-comment this code to enable service worker
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(() => console.log('service worker installed'))
-          .catch(err => console.log('Error', err));
-      }
-    </script>-->
+	<!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+	<link href="css/ionic.app.css" rel="stylesheet">
+	-->
 
-    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+	<!-- ionic/angularjs js -->
+	<script src="lib/ionic/js/ionic.bundle.js" ></script >
 
-    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
-    <link href="css/ionic.app.css" rel="stylesheet">
-    -->
+	<!-- cordova script (this will be a 404 during development) -->
+  <script src="lib/ngCordova/dist/ng-cordova.js" ></script >
+	<script src="cordova.js" ></script >
 
-    <!-- ionic/angularjs js -->
-    <script src="lib/ionic/js/ionic.bundle.js"></script>
+	<!-- your apps js -->
+	<script src="js/app.js" ></script >
+	<script src="js/controllers.js" ></script >
+	<script src="js/services.js" ></script >
+	<script src="js/filters.js" ></script >
+</head >
+<body ng-app="caffeinehit" >
 
-    <!-- cordova script (this will be a 404 during development) -->
-    <script src="cordova.js"></script>
+<ion-pane ng-controller="YelpController">
+	<ion-header-bar class="" >
+		<h1 class="title" >
+			<img src='img/coffee-cup-icon.png' />
+			<span >Find Caffeine</span >
+		</h1 >
+	</ion-header-bar >
 
-    <!-- your app's js -->
-    <script src="js/app.js"></script>
-  </head>
-  <body ng-app="starter">
+	<ion-content >
+    <ion-refresher
+      pulling-text="Loading again ..."
+      pulling-icon="arrow-dropdown"
+      refreshing-spinner="circles"
+      on-refresh="refresh()">
+    </ion-refresher>
+		<ion-list >
+			<ion-item ng-repeat="cafe in yelp.results"
+			          class="item-thumbnail-left" ng-click="openInMaps()">
+				<img ng-src="{{cafe.image_url}}" >
+				<h2 >{{cafe.name}}</h2 >
 
-    <ion-pane>
-      <ion-header-bar class="bar-stable">
-        <h1 class="title">Ionic Blank Starter</h1>
-      </ion-header-bar>
-      <ion-content>
-      </ion-content>
-    </ion-pane>
-  </body>
-</html>
+				<p >
+					<span >
+						<i class="ion ion-ios-navigate" ></i >
+						{{cafe.distance | metersToMiles : cafe.distance | dropDigits: cafe.distance }} miles</span >
+				</p >
+				<p >
+					<i class="ion ion-ios-location" ></i >
+					{{cafe.location.display_address | join : ", "}}
+				</p >
+				<p >
+					<span >
+						<i class="ion ion-star" ></i >
+						{{cafe.rating}}</span >
+					<span >
+						<i class="ion ion-person" ></i >
+						{{cafe.review_count}}</span >
+				</p >
+        <ion-option-button class="round button-calm" ng-click="getDirections()">
+          <i class="ion ion-map"></i>&nbsp;Directions
+        </ion-option-button>
+
+			</ion-item >
+		</ion-list >
+    <ion-infinite-scroll on-infinite="loadMore()" ng-if="yelp.hasMore" immediate-check="false">
+    </ion-infinite-scroll>
+	</ion-content >
+</ion-pane >
+</body >
+</html >
