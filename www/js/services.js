@@ -23,7 +23,7 @@ app.service("YelpService", function ($q, $http, $cordovaGeolocation, $ionicPopup
 			self.isLoading = true;
 			var deferred = $q.defer();
 
-			ionic.Platform.ready(function(){
+			/*ionic.Platform.ready(function(){
 			  $cordovaGeolocation.getCurrentPosition({timeout:1000, enableHighAccuracy:false}).then(function(position){
 			    self.lat = position.coords.latitude;
 			    self.lon = position.coords.longitude;
@@ -58,9 +58,32 @@ app.service("YelpService", function ($q, $http, $cordovaGeolocation, $ionicPopup
             'template': 'Looks like geolocation has been turned off for this app. Please go to "Settings" and turn it on'
           });
         })
-      });
+      });*/
 
+      var params = {
+        page: self.page,
+        lat: self.lat,
+        lon: self.lon
+      };
+      $http.get('https://api.codecraft.tv/samples/v1/coffee/', {params: params})
+        .success(function (data) {
+          self.isLoading = false;
+          console.log(data);
 
+          if (data.businesses.length == 0) {
+            self.hasMore = false;
+          } else {
+            angular.forEach(data.businesses, function (business) {
+              self.results.push(business);
+            });
+          }
+
+          deferred.resolve();
+        })
+        .error(function (data, status, headers, config) {
+          self.isLoading = false;
+          deferred.reject(data);
+        });
 
 			return deferred.promise;
 		}
