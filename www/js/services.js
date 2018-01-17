@@ -23,7 +23,7 @@ app.service("YelpService", function ($q, $http, $cordovaGeolocation, $ionicPopup
 			self.isLoading = true;
 			var deferred = $q.defer();
 
-			/*ionic.Platform.ready(function(){
+			ionic.Platform.ready(function(){
 			  $cordovaGeolocation.getCurrentPosition({timeout:1000, enableHighAccuracy:false}).then(function(position){
 			    self.lat = position.coords.latitude;
 			    self.lon = position.coords.longitude;
@@ -58,7 +58,7 @@ app.service("YelpService", function ($q, $http, $cordovaGeolocation, $ionicPopup
             'template': 'Looks like geolocation has been turned off for this app. Please go to "Settings" and turn it on'
           });
         })
-      });*/
+      });
 
       var params = {
         page: self.page,
